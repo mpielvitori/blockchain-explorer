@@ -1,0 +1,35 @@
+version: '3.7'
+volumes:
+  avalanch_data:
+services:
+  database:
+    image: amazon/dynamodb-local:1.21.0
+    restart: unless-stopped
+    container_name: avascan.database
+    ports:
+      - 8000:8000
+    command: -jar DynamoDBLocal.jar -sharedDb -dbPath /var/lib/dynamodb/data
+    user: root
+    volumes:
+     - avalanch_data:/var/lib/dynamodb/data:delegated
+    environment:
+      - AWS_ACCESS_KEY_ID=""
+      - AWS_SECRET_ACCESS_KEY=""
+      - AWS_SESSION_TOKEN=""
+      - AWS_DEFAULT_REGION=${AWS_DEFAULT_REGION:-us-east-1}
+  transactions-api:
+    container_name: avascan.transactions-api
+    image: avascan.transactions-api
+    build:
+      context: ./transactions-api
+    depends_on:
+      - database
+    ports:
+      - 8080:8080
+    env_file: .env
+    environment:
+      - AWS_ACCESS_KEY_ID=""
+      - AWS_SECRET_ACCESS_KEY=""
+      - AWS_SESSION_TOKEN=""
+      - AWS_DEFAULT_REGION=${AWS_DEFAULT_REGION:-us-east-1}
+    restart: unless-stopped

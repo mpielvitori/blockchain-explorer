@@ -1,0 +1,71 @@
+openapi: 3.0.1
+info:
+  title: Transactions Service REST API
+  version: v1
+servers:
+  - description: 'Local'
+    url: 'http://localhost:8080'
+tags:
+  - description: Transactions
+    name: transactions
+paths:
+  /api/transactions:
+    get:
+      description: This request retrieves all transactions
+      operationId: getTransactions
+      parameters:
+        - in: query
+          required: true
+          name: contract
+          schema:
+            type: string
+            default: '0xb4e16d0168e52d35cacd2c6185b44281ec28c9dc'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Pair'
+          description: OK
+        '500':
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ErrorInfo'
+          description: Forbidden
+      tags:
+        - transactions
+components:
+  schemas:
+    Pair:
+      type: object
+      properties:
+        createdAt:
+          type: string
+          format: date
+        pairAddress:
+          type: string
+        hourStartUnix:
+          type: string
+          format: date
+        reserve1:
+          type: string
+        reserve0:
+          type: string
+        reserveUSD:
+          type: string
+        hourlyVolumeToken0:
+          type: string
+        hourlyVolumeToken1:
+          type: string
+        hourlyVolumeUSD:
+          type: string
+    ErrorInfo:
+      type: object
+      properties:
+        exception:
+          type: string
+        message:
+          type: string
