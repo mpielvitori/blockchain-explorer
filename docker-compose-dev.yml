@@ -20,6 +20,7 @@ services:
       - ./transactions-api/src:/app/src
       - ./transactions-api/__tests__:/app/__tests__
       - ./transactions-api/__mocks__:/app/__mocks__
+      - ./transactions-api/coverage:/app/coverage
     image: avascan.transactions-api
     entrypoint: sh /app/dev.entrypoint.sh
     build:
