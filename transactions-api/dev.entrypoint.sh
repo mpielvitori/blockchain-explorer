@@ -2,4 +2,6 @@
 
 set -eux
 
-npm run startDev
+npm run lint \
+  && npm run test \
+  && npm run startDev

@@ -1,14 +1,27 @@
+/* eslint-disable no-shadow */
 /* eslint-disable no-unused-vars */
 import AWS from 'aws-sdk';
 import config from 'config';
 import { logger } from '../logger';
 
-const dynamoDB = new AWS.DynamoDB({
+const dbClient = new AWS.DynamoDB.DocumentClient({
   endpoint: config.AWS_ENDPOINT,
   region: config.AWS_DEFAULT_REGION,
 });
-const dbClient = new AWS.DynamoDB.DocumentClient({ service: dynamoDB });
 
+export enum TxDirection {
+  IN = 'IN',
+  OUT = 'OUT',
+  ALL = 'ALL',
+}
+export enum TxOrder {
+  ASC = 'ASC',
+  DESC = 'DESC',
+}
+export enum ReceiptStatus {
+  SUCCESS = 'success',
+  FAILED = 'failed',
+}
 export type TxModel = {
   transactionId: string,
   fromAddress: string,
@@ -16,22 +29,16 @@ export type TxModel = {
   transactionIndex: number,
   blockNumber: number,
   etherValue: number,
-  receiptStatus: string
+  receiptStatus: ReceiptStatus
 }
-// eslint-disable-next-line no-shadow
-export enum TxDirection {
-  IN = 'IN',
-  OUT = 'OUT',
-  ALL = 'ALL',
-}
-// eslint-disable-next-line no-shadow
-export enum TxOrder {
-  ASC = 'ASC',
-  DESC = 'DESC',
-}
+
 export async function deleteTable() {
+  logger.debug(`Deleting ${config.TRX_TABLE_NAME} table`);
+  const dynamoDB = new AWS.DynamoDB({
+    endpoint: config.AWS_ENDPOINT,
+    region: config.AWS_DEFAULT_REGION,
+  });
   try {
-    logger.debug(`Deleting ${config.TRX_TABLE_NAME} table`);
     await dynamoDB.deleteTable({
       TableName: config.TRX_TABLE_NAME,
     }).promise();
@@ -44,6 +51,10 @@ export async function deleteTable() {
 
 export async function createTable() {
   logger.debug(`Creating ${config.TRX_TABLE_NAME} table`);
+  const dynamoDB = new AWS.DynamoDB({
+    endpoint: config.AWS_ENDPOINT,
+    region: config.AWS_DEFAULT_REGION,
+  });
   return dynamoDB.createTable({
     TableName: config.TRX_TABLE_NAME,
     KeySchema: [

@@ -1,6 +1,7 @@
 import Web3 from 'web3';
 import config from 'config';
 import { logger } from '../logger';
+import { ReceiptStatus } from '../models/transaction.model';
 
 const provider = config.AVAX_RPC_NETWORK;
 const web3Provider = new Web3.providers.HttpProvider(provider);
@@ -23,8 +24,6 @@ export const getTransactionDetails = async (transactionHash) => {
     web3.eth.getTransaction(transactionHash),
     web3.eth.getTransactionReceipt(transactionHash),
   ]);
-  // eslint-disable-next-line max-len
-  // logger.debug(`************ TRANSACTION: ${transaction.hash} - VALUE: ${transaction.value.toString()} - ${web3.utils.fromWei(transaction.value, 'ether')} ************`);
   return {
     transactionId: transaction.hash,
     fromAddress: transaction.from,
@@ -32,7 +31,7 @@ export const getTransactionDetails = async (transactionHash) => {
     transactionIndex: Number(transaction.transactionIndex),
     blockNumber: Number(transaction.blockNumber),
     etherValue: parseFloat(web3.utils.fromWei(transaction.value, 'ether')),
-    receiptStatus: transactionReceipt.status ? 'success' : 'failed',
+    receiptStatus: transactionReceipt.status ? ReceiptStatus.SUCCESS : ReceiptStatus.FAILED,
   };
 };
 

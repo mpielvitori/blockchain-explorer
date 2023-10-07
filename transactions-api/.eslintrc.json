@@ -10,6 +10,7 @@
     "node": true,
     "es2020": true
   },
+  "ignorePatterns": ["__mocks__/**", "__tests__/**"],  
   "extends": [
     "eslint:recommended",
     "plugin:@typescript-eslint/eslint-recommended",

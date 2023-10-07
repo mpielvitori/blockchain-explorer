@@ -3,11 +3,10 @@ import AWS from 'aws-sdk';
 import config from 'config';
 import { logger } from '../logger';
 
-const dynamoDB = new AWS.DynamoDB({
+const dbClient = new AWS.DynamoDB.DocumentClient({
   endpoint: config.AWS_ENDPOINT,
   region: config.AWS_DEFAULT_REGION,
 });
-const dbClient = new AWS.DynamoDB.DocumentClient({ service: dynamoDB });
 
 export type AddressModel = {
   address: string,
@@ -20,8 +19,12 @@ export enum AddressOrder {
 }
 
 export async function deleteTable() {
+  logger.debug(`Deleting ${config.ADDRESS_TABLE_NAME} table`);
+  const dynamoDB = new AWS.DynamoDB({
+    endpoint: config.AWS_ENDPOINT,
+    region: config.AWS_DEFAULT_REGION,
+  });
   try {
-    logger.debug(`Deleting ${config.ADDRESS_TABLE_NAME} table`);
     await dynamoDB.deleteTable({ TableName: config.ADDRESS_TABLE_NAME }).promise();
     return true;
   } catch (error) {
@@ -32,6 +35,10 @@ export async function deleteTable() {
 
 export async function createTable() {
   logger.debug(`Creating ${config.ADDRESS_TABLE_NAME} table`);
+  const dynamoDB = new AWS.DynamoDB({
+    endpoint: config.AWS_ENDPOINT,
+    region: config.AWS_DEFAULT_REGION,
+  });
   return dynamoDB.createTable({
     TableName: config.ADDRESS_TABLE_NAME,
     KeySchema: [
