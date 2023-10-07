@@ -1,5 +1,5 @@
 jest.mock('aws-sdk');
-import { getAddressesByBalance } from '../../src/controllers/address.controller';
+import { getAddressesByBalance } from '../../src/controllers';
 import { ADDRESS } from '../../__mocks__/mock_constants';
 
 describe('getAddressesByBalance', () => {

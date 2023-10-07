@@ -30,14 +30,11 @@ _Note:_ Configuration file: `.env.dev`
 - Top 100 addresses: http://localhost:8080/api/addresses
 
 ### Pending improvements
-- Enable testing and linting.
-- Add husky.
-- Fix import libraries error
-- Increase test coverage.
 - Make requests with web3-eth-extended and set timeout then handle not processed.
 - Keep the balance up-to-date by the transactions instead of getting it from the blockchain.
 - Parallelize scan of all documents by partition key on get All transactions and get top addresses endpoints.
 - Add pagination.
+- Increase test coverage.
 
 ### Resources
 - [JSON-RPC C-chain](https://docs.infura.io/infura/networks/ethereum/json-rpc-methods)
