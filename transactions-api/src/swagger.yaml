@@ -1,4 +1,4 @@
-openapi: 3.0.1
+openapi: 3.0.3
 info:
   title: Transactions Service REST API
   version: v1
@@ -8,60 +8,214 @@ servers:
 tags:
   - description: Transactions
     name: transactions
+  - description: Addresses
+    name: addresses
 paths:
-  /api/transactions:
+  /api/addresses:
     get:
-      description: This request retrieves all transactions
-      operationId: getTransactions
+      description: This request retrieves all the addresses sorted by balance
+      operationId: getAddresses
       parameters:
         - in: query
-          required: true
-          name: contract
+          required: false
+          name: limit
           schema:
-            type: string
-            default: '0xb4e16d0168e52d35cacd2c6185b44281ec28c9dc'
+            type: integer
+            default: 100
+        - in: query
+          required: false
+          name: order
+          schema:
+            $ref: '#/components/schemas/OrderParam'
       responses:
-        '200':
+        200:
+          description: Success          
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Pair'
-          description: OK
-        '500':
+                  $ref: '#/components/schemas/Address'
+        500:
+          description: Internal Server Error          
           content:
-            '*/*':
+            application/json:
               schema:
                 $ref: '#/components/schemas/ErrorInfo'
-          description: Forbidden
+      tags:
+        - addresses  
+  /api/transactions:
+    get:
+      description: This request retrieves all transactions sorted by AVAX
+      operationId: getTransactions
+      parameters:
+        - in: query
+          required: false
+          name: order
+          schema:
+            $ref: '#/components/schemas/OrderParam'
+      responses:
+        200:
+          description: Success          
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Transaction'
+        500:
+          description: Internal Server Error          
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorInfo'
+      tags:
+        - transactions
+  /api/transactions/address/{address}:
+    get:
+      description: This request retrieves all transactions sorted by AVAX
+      operationId: getTransactionsByAddress
+      parameters:
+        - in: query
+          required: false
+          name: direction
+          description: |
+            Transaction direction.\
+            Sent=`OUT`, Received=`IN`, Both=`ALL`          
+          schema:
+            $ref: '#/components/schemas/DirectionParam'
+        - in: path
+          required: true
+          name: address
+          schema:
+            type: string
+      responses:
+        200:
+          description: Success          
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AddressTransaction'
+        500:
+          description: Internal Server Error          
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorInfo'
+      tags:
+        - transactions
+  /api/transactions/count/address/{address}:
+    get:
+      description: This request retrieves all transactions sorted by AVAX
+      operationId: getTransactionsByAddressCount
+      parameters:
+        - in: query
+          required: false
+          name: direction
+          description: |
+            Transaction direction.\
+            Sent=`OUT`, Received=`IN`, Both=`ALL`          
+          schema:
+            $ref: '#/components/schemas/DirectionParam'
+        - in: path
+          required: true
+          name: address
+          schema:
+            type: string
+      responses:
+        200:
+          description: Success          
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CountResponse'
+        500:
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorInfo'
       tags:
         - transactions
 components:
   schemas:
-    Pair:
+    Address:
       type: object
       properties:
-        createdAt:
+        address:
           type: string
-          format: date
-        pairAddress:
+        balance:
+          type: number
+    Transaction:
+      type: object
+      properties:
+        transactionId:
           type: string
-        hourStartUnix:
+        fromAddress:
           type: string
-          format: date
-        reserve1:
+        toAddress:
           type: string
-        reserve0:
+        transactionIndex:
+          type: number
+        blockNumber:
+          type: number
+        etherValue:
+          type: number
+        receiptStatus:
           type: string
-        reserveUSD:
+          enum:
+            - success
+            - failed
+    AddressTransaction:
+      type: object
+      properties:
+        transactionId:
           type: string
-        hourlyVolumeToken0:
+        fromAddress:
           type: string
-        hourlyVolumeToken1:
+        toAddress:
           type: string
-        hourlyVolumeUSD:
+        transactionIndex:
+          type: number
+        blockNumber:
+          type: number
+        etherValue:
+          type: number
+        receiptStatus:
           type: string
+          enum:
+            - success
+            - failed
+        direction:
+          type: string
+          description: Sent=`OUT`, Received=`IN`
+          enum: 
+            - IN
+            - OUT          
+    CountResponse:
+      type: object
+      properties:
+        total:
+          type: number
+    DirectionParam:
+      type: string
+      description: |
+        Transaction direction.\
+        Sent=`OUT`, Received=`IN`, Both=`ALL`
+      default: ALL      
+      enum: 
+        - IN
+        - OUT
+        - ALL
+    OrderParam:
+      type: string
+      description: Sort order
+      default: ASC
+      enum: 
+        - ASC
+        - DESC
     ErrorInfo:
       type: object
       properties:

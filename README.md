@@ -1,5 +1,5 @@
 # Avalanche blockchain explorer PoC
-PoC of a process that keeps all the transactions injected into Avalanche C-chain updated in a suitable database.
+PoC for a process that keeps all the transactions injected into Avalanche C-chain updated in a suitable database.
 ## Usage
 ### Start local environment
 Build and run docker containers locally. 
@@ -30,15 +30,15 @@ _Note:_ Configuration file: `.env.dev`
 - Top 100 addresses: http://localhost:8080/api/addresses
 
 ### Pending improvements
-- Update swagger.
 - Enable testing and linting.
 - Add husky.
+- Fix import libraries error
 - Increase test coverage.
 - Make requests with web3-eth-extended and set timeout then handle not processed.
 - Keep the balance up-to-date by the transactions instead of getting it from the blockchain.
 - Parallelize scan of all documents by partition key on get All transactions and get top addresses endpoints.
-- Pagination.
+- Add pagination.
 
 ### Resources
-- [RPC C-chain](https://api.avax.network/ext/bc/C/rpc)
 - [JSON-RPC C-chain](https://docs.infura.io/infura/networks/ethereum/json-rpc-methods)
+- [RPC C-chain mainnet endpoint](https://api.avax.network/ext/bc/C/rpc)
