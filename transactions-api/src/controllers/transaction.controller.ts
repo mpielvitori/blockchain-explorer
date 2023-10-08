@@ -49,7 +49,7 @@ export const getAllTransactionsOrderByValue = async (req, res) => {
   logger.debug('Get all transactions ordered by value');
   try {
     const dbTransactions = await getAllTransactionsOrderByValueDB(
-      req.query.order ? req.query.order.toUpperCase() : TxOrder.ASC,
+      req.query.order ? req.query.order.toUpperCase() : TxOrder.DESC,
     );
     res.send(dbTransactions);
   } catch (error) {

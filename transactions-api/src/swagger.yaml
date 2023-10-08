@@ -212,7 +212,7 @@ components:
     OrderParam:
       type: string
       description: Sort order
-      default: ASC
+      default: DESC
       enum: 
         - ASC
         - DESC

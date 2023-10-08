@@ -6,7 +6,7 @@ export const getAddressesByBalance = async (req, res) => {
   try {
     const dbAddresses = await getAddressesByBalanceDB(
       req.query.limit ? req.query.limit : 100,
-      req.query.order ? req.query.order.toUpperCase() : AddressOrder.ASC,
+      req.query.order ? req.query.order.toUpperCase() : AddressOrder.DESC,
     );
     res.send(dbAddresses);
   } catch (error) {
