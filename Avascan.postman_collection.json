@@ -7,15 +7,15 @@
 	},
 	"item": [
 		{
-			"name": "Transactions",
+			"name": "Addresses",
 			"item": [
 				{
-					"name": "Transactions by address",
+					"name": "Top 100 addresses",
 					"request": {
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/api/transactions/address/0x4c784b106a2d242315e0d41ea543e04bcc490d84?direction=all",
+							"raw": "http://localhost:8080/api/addresses?order=desc",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -23,49 +23,28 @@
 							"port": "8080",
 							"path": [
 								"api",
-								"transactions",
-								"address",
-								"0x4c784b106a2d242315e0d41ea543e04bcc490d84"
+								"addresses"
 							],
 							"query": [
 								{
-									"key": "direction",
-									"value": "all"
+									"key": "limit",
+									"value": "100",
+									"disabled": true
+								},
+								{
+									"key": "order",
+									"value": "desc"
 								}
 							]
 						}
 					},
 					"response": []
-				},
-				{
-					"name": "Transactions count by address",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "http://localhost:8080/api/transactions/count/address/0x4c784b106a2d242315e0d41ea543e04bcc490d84?direction=OUT",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "8080",
-							"path": [
-								"api",
-								"transactions",
-								"address",
-								"count",
-								"0x4c784b106a2d242315e0d41ea543e04bcc490d84"
-							],
-							"query": [
-								{
-									"key": "direction",
-									"value": "OUT"
-								}
-							]
-						}
-					},
-					"response": []
-				},
+				}
+			]
+		},
+		{
+			"name": "Transactions",
+			"item": [
 				{
 					"name": "All transactions by AVAX",
 					"request": {
@@ -91,19 +70,14 @@
 						}
 					},
 					"response": []
-				}
-			]
-		},
-		{
-			"name": "Addresses",
-			"item": [
+				},
 				{
-					"name": "Top 100 addresses",
+					"name": "Transactions by address",
 					"request": {
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/api/addresses?limit=100&order=desc",
+							"raw": "http://localhost:8080/api/transactions/address/0xebb156ae11b0e372b9f9326368d3d29513fc7f05?direction=ALL",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -111,16 +85,43 @@
 							"port": "8080",
 							"path": [
 								"api",
-								"addresses"
+								"transactions",
+								"address",
+								"0xebb156ae11b0e372b9f9326368d3d29513fc7f05"
 							],
 							"query": [
 								{
-									"key": "limit",
-									"value": "100"
-								},
+									"key": "direction",
+									"value": "ALL"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Transactions count by address",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/transactions/count/address/0xebb156ae11b0e372b9f9326368d3d29513fc7f05?direction=ALL",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"transactions",
+								"count",
+								"address",
+								"0xebb156ae11b0e372b9f9326368d3d29513fc7f05"
+							],
+							"query": [
 								{
-									"key": "order",
-									"value": "desc"
+									"key": "direction",
+									"value": "ALL"
 								}
 							]
 						}
