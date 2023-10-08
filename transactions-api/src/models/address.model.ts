@@ -46,10 +46,6 @@ export async function createTable() {
         AttributeName: 'address',
         KeyType: 'HASH',
       },
-      {
-        AttributeName: 'balance',
-        KeyType: 'RANGE',
-      },
     ],
     BillingMode: 'PROVISIONED',
     ProvisionedThroughput: {
@@ -66,6 +62,23 @@ export async function createTable() {
         AttributeType: 'N',
       },
     ],
+    GlobalSecondaryIndexes: [
+      {
+        IndexName: 'BalanceIndex',
+        KeySchema: [
+          { AttributeName: 'address', KeyType: 'HASH' },
+          { AttributeName: 'balance', KeyType: 'RANGE' },
+        ],
+        Projection: {
+          ProjectionType: 'INCLUDE',
+          NonKeyAttributes: ['address', 'balance'],
+        },
+        ProvisionedThroughput: {
+          ReadCapacityUnits: 100,
+          WriteCapacityUnits: 1000,
+        },
+      },
+    ],
   }).promise();
 }
 
@@ -79,9 +92,9 @@ export async function saveAll(addresses) {
         [config.ADDRESS_TABLE_NAME]: batchItems.map((item) => ({
           PutRequest: {
             Item: {
-              createdAt: Date.now(),
               ...item,
             },
+            ConditionExpression: 'attribute_not_exists(address)',
           },
         })),
       },
